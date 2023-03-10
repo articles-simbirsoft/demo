@@ -1,28 +1,25 @@
-name: NodeJS with Webpack
+#!/usr/bin/env sh
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+# остановить публикацию при ошибках
+set -e
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+# сборка
+npm run build
 
-    strategy:
-      matrix:
-        node-version: [14.x, 16.x, 18.x]
+# переход в каталог сборки
+cd dist
 
-    steps:
-    - uses: actions/checkout@v3
+# если вы публикуете на пользовательский домен
+# echo 'www.example.com' > CNAME
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
+git init
+git add -A
+git commit -m 'deploy'
 
-    - name: Build
-      run: |
-        npm install
-        npx webpack
+# если вы публикуете по адресу https://<USERNAME>.github.io
+# git push -f git@github.com:<USERNAME>/<USERNAME>.github.io.git master
+
+# если вы публикуете по адресу https://<USERNAME>.github.io/<REPO>
+# git push -f git@github.com:<USERNAME>/<REPO>.git master:gh-pages
+
+cd -
